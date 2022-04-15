@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import com.algaworks.algafood.di.modelo.Cliente;
 
 @Component
+@TipoDoNotificador(NivelUrgencia.SEM_URGENCIA)
 public class NotificadorSMS implements Notificador {
     
     @Override
@@ -12,8 +13,6 @@ public class NotificadorSMS implements Notificador {
         cliente.ativar();
         
         System.out.println("Notificando o cliente " + cliente.getNome() + " via SMS, através do número :" + cliente.getTelefone() + " " + mensagem);
-        // TODO Auto-generated method stub
-        
     }
     
 }
