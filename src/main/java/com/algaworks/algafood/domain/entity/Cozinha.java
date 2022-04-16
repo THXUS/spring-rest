@@ -13,17 +13,18 @@ public class Cozinha {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "cz_codigo")
+    private Long codigo;
     
-    @Column(name = "cz_nome", length = 30)
+    @Column(name = "cz_nome", length = 30, nullable = false)
     private String nome;
     
     public Long getId() {
-        return this.id;
+        return this.codigo;
     }
     
     public void setId(final Long id) {
-        this.id = id;
+        this.codigo = id;
     }
     
     public String getNome() {
@@ -38,7 +39,7 @@ public class Cozinha {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.codigo == null) ? 0 : this.codigo.hashCode());
         return result;
     }
     
@@ -54,11 +55,11 @@ public class Cozinha {
             return false;
         }
         final Cozinha other = (Cozinha) obj;
-        if (this.id == null) {
-            if (other.id != null) {
+        if (this.codigo == null) {
+            if (other.codigo != null) {
                 return false;
             }
-        } else if (!this.id.equals(other.id)) {
+        } else if (!this.codigo.equals(other.codigo)) {
             return false;
         }
         return true;

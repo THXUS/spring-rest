@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,7 +17,8 @@ public class Restaurante {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "res_codigo")
+    private Long codigo;
     
     @Column(name = "res_nome", length = 30)
     private String nome;
@@ -23,12 +26,16 @@ public class Restaurante {
     @Column(name = "res_taxafrete")
     private BigDecimal taxaFrete;
     
+    @ManyToOne
+    @JoinColumn(name = "res_cozinha")
+    private Cozinha cozinha;
+    
     public Long getId() {
-        return this.id;
+        return this.codigo;
     }
     
     public void setId(final Long id) {
-        this.id = id;
+        this.codigo = id;
     }
     
     public String getNome() {
@@ -47,11 +54,19 @@ public class Restaurante {
         this.taxaFrete = taxaFrete;
     }
     
+    public Cozinha getCozinha() {
+        return this.cozinha;
+    }
+    
+    public void setCozinha(final Cozinha cozinha) {
+        this.cozinha = cozinha;
+    }
+    
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.id == null) ? 0 : this.id.hashCode());
+        result = prime * result + ((this.codigo == null) ? 0 : this.codigo.hashCode());
         return result;
     }
     
@@ -67,11 +82,11 @@ public class Restaurante {
             return false;
         }
         final Restaurante other = (Restaurante) obj;
-        if (this.id == null) {
-            if (other.id != null) {
+        if (this.codigo == null) {
+            if (other.codigo != null) {
                 return false;
             }
-        } else if (!this.id.equals(other.id)) {
+        } else if (!this.codigo.equals(other.codigo)) {
             return false;
         }
         return true;
