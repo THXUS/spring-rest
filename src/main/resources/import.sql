@@ -1,0 +1,1 @@
+insert into cozinha (cz_nome) values ('Tailandesa'), ('Coreana');
