@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.domain.entity.Restaurante;
@@ -17,5 +18,22 @@ public class RestauranteRepository {
     
     public List<Restaurante> listar() {
         return this.entityManager.createQuery("from Restaurante", Restaurante.class).getResultList();
+    }
+    
+    public Restaurante getPorCodigo(final Long codigo) {
+        final Restaurante entidade = this.entityManager.find(Restaurante.class, codigo);
+        
+        if (entidade != null) {
+            this.entityManager.detach(entidade);
+            return entidade;
+        }
+        
+        throw new EmptyResultDataAccessException(1);
+    }
+    
+    public void inserir(final Restaurante entidade) {
+        
+        this.entityManager.persist(entidade);
+        
     }
 }
