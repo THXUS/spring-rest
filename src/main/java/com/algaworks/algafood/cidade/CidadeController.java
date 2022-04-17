@@ -16,28 +16,23 @@ import com.algaworks.algafood.domain.entity.Cidade;
 public class CidadeController {
     
     @Autowired
-    private CidadeRepository cidadeRepository;
+    private CidadeService cidadeService;
     
     @GetMapping
     public ResponseEntity<List<Cidade>> listar() {
-        final List<Cidade> cidades = this.cidadeRepository.listar();
         
-        if (cidades.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        
-        return ResponseEntity.ok(cidades);
+        return ResponseEntity.ok(this.cidadeService.listar());
         
     }
     
     @GetMapping("/{codigo}")
     public ResponseEntity<Cidade> getPorCodigo(@PathVariable("codigo") final Long codigo) {
-        final Cidade cidade = this.cidadeRepository.getPorCodigo(codigo);
+        final Cidade cidade = this.cidadeService.getPorCodigo(codigo);
         
         if (cidade != null) {
             return ResponseEntity.ok(cidade);
         }
-        return ResponseEntity.notFound().build();
+        return ResponseEntity.noContent().build();
         
     }
     
