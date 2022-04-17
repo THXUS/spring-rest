@@ -19,12 +19,12 @@ public class Cozinha {
     @Column(name = "cz_nome", length = 30, nullable = false)
     private String nome;
     
-    public Long getId() {
+    public Long getCodigo() {
         return this.codigo;
     }
     
-    public void setId(final Long id) {
-        this.codigo = id;
+    public void setCodigo(final Long codigo) {
+        this.codigo = codigo;
     }
     
     public String getNome() {

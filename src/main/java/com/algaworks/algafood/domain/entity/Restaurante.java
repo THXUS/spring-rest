@@ -30,12 +30,12 @@ public class Restaurante {
     @JoinColumn(name = "res_cozinha")
     private Cozinha cozinha;
     
-    public Long getId() {
+    public Long getCodigo() {
         return this.codigo;
     }
     
-    public void setId(final Long id) {
-        this.codigo = id;
+    public void setCodigo(final Long codigo) {
+        this.codigo = codigo;
     }
     
     public String getNome() {
