@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.algaworks.algafood.domain.entity.Cozinha;
@@ -26,15 +25,10 @@ public class CozinhaRepository {
             final Cozinha entidade = this.entityManager.find(Cozinha.class, codigo, LockModeType.NONE);
             if (entidade != null) {
                 this.entityManager.detach(entidade);
-                return entidade;
             }
-            throw new EmptyResultDataAccessException(1);
+            return entidade;
         } else {
-            final Cozinha entidade = this.entityManager.find(Cozinha.class, codigo);
-            if (entidade != null) {
-                return entidade;
-            }
-            throw new EmptyResultDataAccessException(1);
+            return this.entityManager.find(Cozinha.class, codigo);
         }
     }
     
