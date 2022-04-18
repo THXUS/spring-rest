@@ -28,12 +28,16 @@ public class RestauranteRepository {
             return entidade;
         }
         
-        throw new EmptyResultDataAccessException(1);
+       return null;
     }
     
     public void inserir(final Restaurante entidade) {
         
         this.entityManager.persist(entidade);
         
+    }
+    
+    public void alterar(final Restaurante entidade) {
+        this.entityManager.merge(entidade);
     }
 }
