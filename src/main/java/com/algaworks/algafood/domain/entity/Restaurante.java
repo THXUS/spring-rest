@@ -20,14 +20,14 @@ public class Restaurante {
     @Column(name = "res_codigo")
     private Long codigo;
     
-    @Column(name = "res_nome", length = 30)
+    @Column(name = "res_nome", length = 30, nullable = false)
     private String nome;
     
     @Column(name = "res_taxafrete")
     private BigDecimal taxaFrete;
     
     @ManyToOne
-    @JoinColumn(name = "res_cozinha")
+    @JoinColumn(name = "res_cozinha", nullable = false)
     private Cozinha cozinha;
     
     public Long getCodigo() {
