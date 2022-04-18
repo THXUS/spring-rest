@@ -39,4 +39,12 @@ public class EstadoRepository {
         
     }
     
+    public void inserir(final Estado entidade) {
+        this.entityManager.persist(entidade);
+    }
+    
+    public void alterar(final Estado entidade) {
+        this.entityManager.merge(entidade);
+    }
+    
 }

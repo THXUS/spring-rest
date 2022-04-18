@@ -2,11 +2,14 @@ package com.algaworks.algafood.estado;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entity.Estado;
 import com.algaworks.algafood.domain.exception.EntidadeEmUso;
@@ -31,6 +34,28 @@ public class EstadoService {
         }
         
         throw new SingletonNaoEncontrado(String.format("Estado %d não foi encontrado!", codigo));
+    }
+    
+    @Transactional
+    public Estado inserir(final Estado entidade) {
+        this.estadoRepository.inserir(entidade);
+        return entidade;
+        
+    }
+    
+    @Transactional
+    public Estado alterar(final Long codigo, final Estado estado) {
+        
+        final Optional<Estado> entidade = Optional.ofNullable(this.estadoRepository.getPorCodigo(codigo));
+        
+        BeanUtils.copyProperties(estado,
+                entidade.orElseThrow(() -> new EntidadeNaoEncontrada("Entidade não encontrada")),
+                "codigo");
+        
+        this.estadoRepository.alterar(entidade.get());
+        
+        return entidade.get();
+        
     }
     
     public void excluir(final Long codigo) {
