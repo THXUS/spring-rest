@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.domain.entity.Estado;
 import com.algaworks.algafood.domain.exception.EntidadeEmUso;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
+import com.algaworks.algafood.domain.exception.SingletonNaoEncontrado;
 
 @RestController
 @RequestMapping("/estado")
@@ -25,6 +26,15 @@ public class EstadoController {
     @GetMapping
     public List<Estado> listar() {
         return this.estadoService.listar();
+    }
+    
+    @GetMapping("/{codigo}")
+    public ResponseEntity<?> getPorCodigo(@PathVariable("codigo") final Long codigo) {
+        try {
+            return ResponseEntity.ok(this.estadoService.getPorCodigo(codigo));
+        } catch (final SingletonNaoEncontrado e) {
+            return ResponseEntity.notFound().build();
+        }
     }
     
     @DeleteMapping("/{codigo}")

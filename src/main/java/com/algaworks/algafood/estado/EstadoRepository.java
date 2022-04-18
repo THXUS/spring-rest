@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +35,7 @@ public class EstadoRepository {
             return entidade;
         }
         
-        throw new EmptyResultDataAccessException(1);
+        return null;
         
     }
     

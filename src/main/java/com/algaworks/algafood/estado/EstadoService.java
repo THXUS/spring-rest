@@ -1,6 +1,7 @@
 package com.algaworks.algafood.estado;
 
 import java.util.List;
+import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import com.algaworks.algafood.domain.entity.Estado;
 import com.algaworks.algafood.domain.exception.EntidadeEmUso;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
+import com.algaworks.algafood.domain.exception.SingletonNaoEncontrado;
 
 @Service
 public class EstadoService {
@@ -19,6 +21,16 @@ public class EstadoService {
     
     public List<Estado> listar() {
         return this.estadoRepository.listar();
+    }
+    
+    public Estado getPorCodigo(final Long codigo) {
+        final Estado entidade = this.estadoRepository.getPorCodigo(codigo);
+        
+        if (Objects.nonNull(entidade)) {
+            return entidade;
+        }
+        
+        throw new SingletonNaoEncontrado(String.format("Estado %d não foi encontrado!", codigo));
     }
     
     public void excluir(final Long codigo) {
