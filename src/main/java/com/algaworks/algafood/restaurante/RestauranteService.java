@@ -2,10 +2,10 @@ package com.algaworks.algafood.restaurante;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,17 +43,16 @@ public class RestauranteService {
     @Transactional
     public Restaurante inserir(final Restaurante entidade) {
         
-        try {
-            
-            final Cozinha cozinha = this.cozinhaRepository.getPorCodigo(entidade.getCozinha().getCodigo());
-            entidade.setCozinha(cozinha);
-            
+        // TODO Retirar quando for utilizar DTOs com Validação por anotação
+        if (Objects.nonNull(entidade.getCozinha())) {
+            final Optional<Cozinha> cozinha = Optional.ofNullable(this.cozinhaRepository.getPorCodigo(entidade.getCozinha().getCodigo()));
+            entidade.setCozinha(cozinha.orElseThrow(() -> new EntidadeNaoEncontrada("Cozinha não encontrada!")));
             this.restauranteRepository.inserir(entidade);
             return entidade;
             
-        } catch (final EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontrada(String.format("A Cozinha %d, não foi encontrada!", entidade.getCozinha().getCodigo()));
         }
+        
+        throw new EntidadeNaoEncontrada("O Campo cozinha é obrigatório");
         
     }
     
