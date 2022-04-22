@@ -7,7 +7,6 @@ import java.util.Optional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,14 +60,16 @@ public class EstadoService {
     public void excluir(final Long codigo) {
         
         try {
-            final Estado entidade = this.estadoRepository.getPorCodigo(codigo);
+            final Optional<Estado> entidade = Optional.ofNullable(this.estadoRepository.getPorCodigo(codigo));
             
-            this.estadoRepository.excluir(entidade);
+            if (entidade.isEmpty()) {
+                throw new EntidadeNaoEncontrada(String.format("Estado %d não foi encontrado!", codigo));
+            }
+            
+            this.estadoRepository.excluir(entidade.get());
             
         } catch (final DataIntegrityViolationException e) {
             throw new EntidadeEmUso(String.format("Estado %d não pode ser excluído, pois está em uso!", codigo));
-        } catch (final EmptyResultDataAccessException e) {
-            throw new EntidadeNaoEncontrada(String.format("Estado %d não foi encontrado!", codigo));
         }
         
     }
