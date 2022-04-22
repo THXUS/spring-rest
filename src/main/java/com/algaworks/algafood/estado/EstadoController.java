@@ -57,14 +57,14 @@ public class EstadoController {
     }
     
     @DeleteMapping("/{codigo}")
-    public ResponseEntity<Estado> excluir(@PathVariable("codigo") final Long codigo) {
+    public ResponseEntity<?> excluir(@PathVariable("codigo") final Long codigo) {
         
         try {
             this.estadoService.excluir(codigo);
             return ResponseEntity.noContent().build();
             
         } catch (final EntidadeEmUso e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (final EntidadeNaoEncontrada e) {
             return ResponseEntity.notFound().build();
             
