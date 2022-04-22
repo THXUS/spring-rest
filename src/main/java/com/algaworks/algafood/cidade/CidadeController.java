@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.entity.Cidade;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
 import com.algaworks.algafood.domain.exception.RegraDeNegocio;
+import com.algaworks.algafood.domain.exception.SingletonNaoEncontrado;
 
 @RestController
 @RequestMapping("/cidade")
@@ -53,6 +56,7 @@ public class CidadeController {
     }
     
     @PostMapping
+    @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> inserir(@RequestBody final Cidade cidade) {
         try {
             return ResponseEntity.status(HttpStatus.CREATED).body(this.cidadeService.inserir(cidade));
@@ -60,6 +64,18 @@ public class CidadeController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (final RegraDeNegocio e) {
             return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+    
+    @PutMapping("/{codigo}")
+    public ResponseEntity<?> alterar(@PathVariable("codigo") final Long codigo, @RequestBody final Cidade cidade) {
+        
+        try {
+            return ResponseEntity.ok(this.cidadeService.alterar(codigo, cidade));
+        } catch (final SingletonNaoEncontrado e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (final EntidadeNaoEncontrada e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
     

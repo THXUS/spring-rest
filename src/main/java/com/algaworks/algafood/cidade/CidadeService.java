@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +13,7 @@ import com.algaworks.algafood.domain.entity.Cidade;
 import com.algaworks.algafood.domain.entity.Estado;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
 import com.algaworks.algafood.domain.exception.RegraDeNegocio;
+import com.algaworks.algafood.domain.exception.SingletonNaoEncontrado;
 import com.algaworks.algafood.estado.EstadoRepository;
 
 @Service
@@ -55,6 +57,23 @@ public class CidadeService {
         
         throw new RegraDeNegocio("Estado é um campo Obrigatório");
         
+    }
+    
+    @Transactional
+    public Cidade alterar(final Long codigo, final Cidade cidade) {
+        final Optional<Cidade> entidade = Optional.ofNullable(this.cidadeRepository.getPorCodigo(codigo));
+        
+        if (Objects.nonNull(cidade.getEstado()) && cidade.getEstado().getCodigo() != null) {
+            final Optional<Estado> estado = Optional.ofNullable(this.estadoRepository.getPorCodigo(cidade.getEstado().getCodigo()));
+            cidade.setEstado(estado.orElseThrow(() -> new EntidadeNaoEncontrada("Estado não encontrado!")));
+            BeanUtils.copyProperties(cidade, entidade.orElseThrow(() -> new SingletonNaoEncontrado("Cidade não encontrada")), "codigo");
+        } else {
+            BeanUtils.copyProperties(cidade, entidade.orElseThrow(() -> new SingletonNaoEncontrado("Cidade não encontrada")), "codigo", "estado");
+        }
+        
+        this.cidadeRepository.alterar(entidade.get());
+        
+        return entidade.get();
     }
     
 }

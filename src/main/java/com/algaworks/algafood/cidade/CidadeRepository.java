@@ -38,4 +38,8 @@ public class CidadeRepository {
         this.enitEntityManager.persist(entidade);
     }
     
+    public void alterar(final Cidade entidade) {
+        this.enitEntityManager.merge(entidade);
+    }
+    
 }
