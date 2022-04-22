@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.entity.Cidade;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
+import com.algaworks.algafood.domain.exception.RegraDeNegocio;
 
 @RestController
 @RequestMapping("/cidade")
@@ -53,7 +54,13 @@ public class CidadeController {
     
     @PostMapping
     public ResponseEntity<?> inserir(@RequestBody final Cidade cidade) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(this.cidadeService.inserir(cidade));
+        try {
+            return ResponseEntity.status(HttpStatus.CREATED).body(this.cidadeService.inserir(cidade));
+        } catch (final EntidadeNaoEncontrada e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (final RegraDeNegocio e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
     
 }
