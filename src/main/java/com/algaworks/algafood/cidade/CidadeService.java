@@ -1,6 +1,7 @@
 package com.algaworks.algafood.cidade;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,13 +9,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.algaworks.algafood.domain.entity.Cidade;
+import com.algaworks.algafood.domain.entity.Estado;
 import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
+import com.algaworks.algafood.domain.exception.RegraDeNegocio;
+import com.algaworks.algafood.estado.EstadoRepository;
 
 @Service
 public class CidadeService {
     
     @Autowired
     private CidadeRepository cidadeRepository;
+    
+    @Autowired
+    private EstadoRepository estadoRepository;
     
     public List<Cidade> listar() {
         return this.cidadeRepository.listar();
@@ -39,8 +46,15 @@ public class CidadeService {
     
     @Transactional
     public Cidade inserir(final Cidade entidade) {
-        this.cidadeRepository.inserir(entidade);
-        return entidade;
+        if (Objects.nonNull(entidade.getEstado()) && entidade.getEstado().getCodigo() != null) {
+            final Optional<Estado> estado = Optional.ofNullable(this.estadoRepository.getPorCodigo(entidade.getEstado().getCodigo()));
+            entidade.setEstado(estado.orElseThrow(() -> new EntidadeNaoEncontrada(String.format("O Estado %d não foi encontrado!", entidade.getEstado().getCodigo()))));
+            this.cidadeRepository.inserir(entidade);
+            return entidade;
+        }
+        
+        throw new RegraDeNegocio("Estado é um campo Obrigatório");
+        
     }
     
 }
