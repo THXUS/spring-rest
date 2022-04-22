@@ -3,13 +3,18 @@ package com.algaworks.algafood.cidade;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.algaworks.algafood.domain.entity.Cidade;
+import com.algaworks.algafood.domain.exception.EntidadeNaoEncontrada;
 
 @RestController
 @RequestMapping("/cidade")
@@ -34,6 +39,21 @@ public class CidadeController {
         }
         return ResponseEntity.noContent().build();
         
+    }
+    
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<?> excluir(@PathVariable("codigo") final Long codigo) {
+        try {
+            this.cidadeService.excluir(codigo);
+            return ResponseEntity.noContent().build();
+        } catch (final EntidadeNaoEncontrada e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+    
+    @PostMapping
+    public ResponseEntity<?> inserir(@RequestBody final Cidade cidade) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(this.cidadeService.inserir(cidade));
     }
     
 }

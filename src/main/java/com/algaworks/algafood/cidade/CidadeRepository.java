@@ -30,4 +30,12 @@ public class CidadeRepository {
         return null;
     }
     
+    public void excluir(final Cidade entidade) {
+        this.enitEntityManager.remove(this.enitEntityManager.contains(entidade) ? entidade : this.enitEntityManager.merge(entidade));
+    }
+    
+    public void inserir(final Cidade entidade) {
+        this.enitEntityManager.persist(entidade);
+    }
+    
 }
